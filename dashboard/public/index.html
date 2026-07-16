@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bot Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="bot-avatar">🤖</div>
+      <div class="bot-info">
+        <span class="bot-name">Bot Dashboard</span>
+        <span class="bot-status"><span class="status-dot"></span>online</span>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="#" class="nav-item active" data-page="home" id="nav-home">
+        <span class="nav-icon">🏠</span> Home
+      </a>
+      <a href="#" class="nav-item" data-page="settings" id="nav-settings">
+        <span class="nav-icon">⚙️</span> Settings
+      </a>
+      <a href="#" class="nav-item" data-page="automod" id="nav-automod">
+        <span class="nav-icon">🛡️</span> Auto-Mod
+      </a>
+      <a href="#" class="nav-item" data-page="logging" id="nav-logging">
+        <span class="nav-icon">📋</span> Logging
+      </a>
+      <a href="#" class="nav-item" data-page="welcome" id="nav-welcome">
+        <span class="nav-icon">👋</span> Welcome
+      </a>
+      <a href="#" class="nav-item" data-page="nsfw" id="nav-nsfw">
+        <span class="nav-icon">🔞</span> NSFW Filter
+      </a>
+      <a href="#" class="nav-item" data-page="economy" id="nav-economy">
+        <span class="nav-icon">💰</span> Economy
+      </a>
+      <a href="#" class="nav-item" data-page="modlogs" id="nav-modlogs">
+        <span class="nav-icon">📝</span> Mod Logs
+      </a>
+      <a href="#" class="nav-item" data-page="warnings" id="nav-warnings">
+        <span class="nav-icon">⚠️</span> Warnings
+      </a>
+      <div class="sidebar-sep"></div>
+      <a href="/logout" class="nav-item nav-logout">
+        <span class="nav-icon">🚪</span> Logout
+      </a>
+    </nav>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="topbar">
+      <div class="page-title" id="page-title">Home</div>
+      <div class="topbar-right">
+        <div class="save-toast" id="save-toast">✓ saved!</div>
+      </div>
+    </div>
+
+    <!-- Home Page -->
+    <div class="page active" id="page-home">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon">⚠️</div>
+          <div class="stat-info">
+            <div class="stat-value" id="stat-warns">-</div>
+            <div class="stat-label">Total Warnings</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">📋</div>
+          <div class="stat-info">
+            <div class="stat-value" id="stat-cases">-</div>
+            <div class="stat-label">Mod Cases</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">👥</div>
+          <div class="stat-info">
+            <div class="stat-value" id="stat-users">-</div>
+            <div class="stat-label">Economy Users</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <div class="section-header">
+          <h2>Top Richest Members</h2>
+          <p>economy leaderboard</p>
+        </div>
+        <div id="lb-list" class="lb-list">
+          <div class="loading">loading...</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Settings Page -->
+    <div class="page" id="page-settings">
+      <div class="section-card">
+        <div class="section-header">
+          <h2>Bot Settings</h2>
+          <p>configure the bot basics</p>
+        </div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Command Prefix</label>
+            <input type="text" id="cfg-prefix" placeholder="!" maxlength="5" />
+            <small>used for any legacy prefix commands</small>
+          </div>
+          <div class="form-group">
+            <label>Log Channel ID</label>
+            <input type="text" id="cfg-logChannel" placeholder="paste channel ID here" />
+            <small>for message edits, deletes, joins etc</small>
+          </div>
+          <div class="form-group">
+            <label>Mod Log Channel ID</label>
+            <input type="text" id="cfg-modLogChannel" placeholder="paste channel ID here" />
+            <small>for bans, kicks, warns, NSFW detections</small>
+          </div>
+          <div class="form-group">
+            <label>Auto-Role ID</label>
+            <input type="text" id="cfg-autoRoleId" placeholder="role ID to give on join" />
+            <small>leave empty to disable auto-role</small>
+          </div>
+          <div class="form-group">
+            <label>Staff Role IDs</label>
+            <input type="text" id="cfg-staffRoles" placeholder="role1id, role2id, ..." />
+            <small>staff are exempt from automod and NSFW filter, separate with commas</small>
+          </div>
+        </div>
+        <button class="btn-save" onclick="saveSettings()">Save Settings</button>
+      </div>
+    </div>
+
+    <!-- Auto-Mod Page -->
+    <div class="page" id="page-automod">
+      <div class="section-card">
+        <div class="section-header">
+          <h2>Auto-Moderation</h2>
+          <p>automatic rule enforcement</p>
+        </div>
+
+        <div class="toggle-row">
+          <div>
+            <div class="toggle-label">Enable Auto-Mod</div>
+            <div class="toggle-desc">master switch for all automod features</div>
+          </div>
+          <label class="toggle"><input type="checkbox" id="am-enabled" /><span class="slider"></span></label>
+        </div>
+
+        <div class="subsection">
+          <h3>Anti-Spam</h3>
+          <div class="toggle-row">
+            <span>Enabled</span>
+            <label class="toggle"><input type="checkbox" id="am-spam-enabled" /><span class="slider"></span></label>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Max Messages</label>
+              <input type="number" id="am-spam-max" min="2" max="20" />
+              <small>messages per interval before triggering</small>
+            </div>
+            <div class="form-group">
+              <label>Interval (ms)</label>
+              <input type="number" id="am-spam-interval" min="1000" max="10000" step="500" />
+              <small>time window to count messages in</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="subsection">
+          <h3>Anti-Link</h3>
+          <div class="toggle-row">
+            <span>Enabled</span>
+            <label class="toggle"><input type="checkbox" id="am-link-enabled" /><span class="slider"></span></label>
+          </div>
+          <div class="form-group">
+            <label>Whitelisted Domains</label>
+            <input type="text" id="am-link-whitelist" placeholder="youtube.com, twitch.tv, ..." />
+            <small>domains that are allowed even with the link filter on</small>
+          </div>
+        </div>
+
+        <div class="subsection">
+          <h3>Bad Word Filter</h3>
+          <div class="toggle-row">
+            <span>Enabled</span>
+            <label class="toggle"><input type="checkbox" id="am-bw-enabled" /><span class="slider"></span></label>
+          </div>
+          <div class="form-group">
+            <label>Banned Words</label>
+            <textarea id="am-bw-words" rows="4" placeholder="word1, word2, word3..."></textarea>
+            <small>separate with commas, not case-sensitive</small>
+          </div>
+        </div>
+
+        <div class="subsection">
+          <h3>Anti-Caps</h3>
+          <div class="toggle-row">
+            <span>Enabled</span>
+            <label class="toggle"><input type="checkbox" id="am-caps-enabled" /><span class="slider"></span></label>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Caps Threshold %</label>
+              <input type="number" id="am-caps-threshold" min="50" max="100" />
+            </div>
+            <div class="form-group">
+              <label>Min Message Length</label>
+              <input type="number" id="am-caps-minlen" min="5" max="50" />
+              <small>ignore short messages</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="subsection">
+          <h3>Punishment Escalation</h3>
+          <div class="toggle-row">
+            <span>Auto-escalate punishments</span>
+            <label class="toggle"><input type="checkbox" id="am-esc-enabled" /><span class="slider"></span></label>
+          </div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Warn 3</label>
+              <select id="am-esc-warn3">
+                <option value="warn">Warn</option>
+                <option value="timeout_10m">Timeout 10m</option>
+                <option value="timeout_1h">Timeout 1h</option>
+                <option value="kick">Kick</option>
+                <option value="ban">Ban</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Warn 4</label>
+              <select id="am-esc-warn4">
+                <option value="warn">Warn</option>
+                <option value="timeout_10m">Timeout 10m</option>
+                <option value="timeout_1h">Timeout 1h</option>
+                <option value="kick">Kick</option>
+                <option value="ban">Ban</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Warn 5</label>
+              <select id="am-esc-warn5">
+                <option value="warn">Warn</option>
+                <option value="timeout_10m">Timeout 10m</option>
+                <option value="timeout_1h">Timeout 1h</option>
+                <option value="kick">Kick</option>
+                <option value="ban">Ban</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Warn 6+</label>
+              <select id="am-esc-warn6">
+                <option value="warn">Warn</option>
+                <option value="timeout_10m">Timeout 10m</option>
+                <option value="timeout_1h">Timeout 1h</option>
+                <option value="kick">Kick</option>
+                <option value="ban">Ban</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <button class="btn-save" onclick="saveAutoMod()">Save Auto-Mod Settings</button>
+      </div>
+    </div>
+
+    <!-- Logging Page -->
+    <div class="page" id="page-logging">
+      <div class="section-card">
+        <div class="section-header">
+          <h2>Logging</h2>
+          <p>control what gets logged and where</p>
+        </div>
+        <div class="toggle-row">
+          <div><div class="toggle-label">Message Deletes</div></div>
+          <label class="toggle"><input type="checkbox" id="log-delete" /><span class="slider"></span></label>
+        </div>
+        <div class="toggle-row">
+          <div><div class="toggle-label">Message Edits</div></div>
+          <label class="toggle"><input type="checkbox" id="log-edit" /><span class="slider"></span></label>
+        </div>
+        <div class="toggle-row">
+          <div><div class="toggle-label">Member Joins</div></div>
+          <label class="toggle"><input type="checkbox" id="log-join" /><span class="slider"></span></label>
+        </div>
+        <div class="toggle-row">
+          <div><div class="toggle-label">Member Leaves</div></div>
+          <label class="toggle"><input type="checkbox" id="log-leave" /><span class="slider"></span></label>
+        </div>
+        <div class="toggle-row">
+          <div><div class="toggle-label">Mod Actions (bans, kicks, warns)</div></div>
+          <label class="toggle"><input type="checkbox" id="log-modactions" /><span class="slider"></span></label>
+        </div>
+        <div class="toggle-row">
+          <div><div class="toggle-label">Voice Activity</div></div>
+          <label class="toggle"><input type="checkbox" id="log-voice" /><span class="slider"></span></label>
+        </div>
+        <button class="btn-save" onclick="saveLogging()">Save Logging Settings</button>
+      </div>
+    </div>
+
+    <!-- Welcome Page -->
+    <div class="page" id="page-welcome">
+      <div class="section-card">
+        <div class="section-header">
+          <h2>Welcome System</h2>
+          <p>greet new members automatically</p>
+        </div>
+        <div class="form-group">
+          <label>Welcome Channel ID</label>
+          <input type="text" id="wlc-channel" placeholder="channel ID where welcome messages go" />
+        </div>
+        <div class="form-group">
+          <label>Welcome Message</label>
+          <textarea id="wlc-message" rows="3" placeholder="hey {user}, welcome to {server}!"></textarea>
+          <small>use {user} for mention, {username} for name, {server} for server name, {membercount} for member count</small>
+        </div>
+        <div class="form-group">
+          <label>Leave Message</label>
+          <textarea id="wlc-leave" rows="2" placeholder="welp, {username} just left. rip"></textarea>
+        </div>
+        <button class="btn-save" onclick="saveWelcome()">Save Welcome Settings</button>
+      </div>
+    </div>
+
+    <!-- NSFW Filter Page -->
+    <div class="page" id="page-nsfw">
+      <div class="section-card">
+        <div class="section-header">
+          <h2>NSFW Image Filter</h2>
+          <p>AI-powered image scanner - no API key needed, runs locally</p>
+        </div>
+        <div class="toggle-row">
+          <div>
+            <div class="toggle-label">Enable NSFW Filter</div>
+            <div class="toggle-desc">scans all image attachments automatically</div>
+          </div>
+          <label class="toggle"><input type="checkbox" id="nsfw-enabled" /><span class="slider"></span></label>
+        </div>
+        <div class="form-group">
+          <label>Detection Confidence Threshold (%)</label>
+          <input type="number" id="nsfw-threshold" min="50" max="99" />
+          <small>lower = more aggressive, higher = fewer false positives. 80 is a good default</small>
+        </div>
+        <div class="form-group">
+          <label>Whitelisted Channel IDs</label>
+          <input type="text" id="nsfw-whitelist" placeholder="channelid1, channelid2, ..." />
+          <small>channels where the NSFW filter is disabled</small>
+        </div>
+        <div class="info-box">
+          <strong>how it works:</strong> when someone posts an image, the AI model checks if it's NSFW. if the confidence is above your threshold, the image gets deleted, the user gets a DM warning, and it gets logged to your mod channel.
+        </div>
+        <button class="btn-save" onclick="saveNsfw()">Save NSFW Settings</button>
+      </div>
+    </div>
+
+    <!-- Economy Page -->
+    <div class="page" id="page-economy">
+      <div class="section-card">
+        <div class="section-header">
+          <h2>Economy Settings</h2>
+          <p>configure the coin system and gambling</p>
+        </div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Starting Balance</label>
+            <input type="number" id="eco-start" min="0" />
+            <small>coins new users start with</small>
+          </div>
+          <div class="form-group">
+            <label>Daily Reward</label>
+            <input type="number" id="eco-daily" min="10" />
+            <small>base coins from /daily</small>
+          </div>
+          <div class="form-group">
+            <label>Streak Bonus (per day)</label>
+            <input type="number" id="eco-streak" min="0" />
+            <small>extra coins per day of streak</small>
+          </div>
+          <div class="form-group">
+            <label>Max Bet</label>
+            <input type="number" id="eco-maxbet" min="100" />
+            <small>max coins per gambling bet</small>
+          </div>
+          <div class="form-group">
+            <label>Rob Success Chance (%)</label>
+            <input type="number" id="eco-rob" min="1" max="90" />
+            <small>% chance to succeed when robbing</small>
+          </div>
+          <div class="form-group">
+            <label>Rob Cooldown (minutes)</label>
+            <input type="number" id="eco-robcd" min="1" />
+            <small>how long between robs</small>
+          </div>
+        </div>
+        <button class="btn-save" onclick="saveEconomy()">Save Economy Settings</button>
+      </div>
+
+      <div class="section-card" style="margin-top: 20px;">
+        <div class="section-header">
+          <h2>Manage User Balances</h2>
+          <p>directly set a user's balance</p>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>User ID</label>
+            <input type="text" id="eco-uid" placeholder="user's Discord ID" />
+          </div>
+          <div class="form-group">
+            <label>New Balance</label>
+            <input type="number" id="eco-newbal" min="0" />
+          </div>
+        </div>
+        <button class="btn-save" onclick="setUserBalance()">Set Balance</button>
+      </div>
+    </div>
+
+    <!-- Mod Logs Page -->
+    <div class="page" id="page-modlogs">
+      <div class="section-card">
+        <div class="section-header">
+          <h2>Mod Logs</h2>
+          <p>every moderation action, tracked with case IDs</p>
+        </div>
+        <div class="table-wrap">
+          <table class="data-table" id="modlogs-table">
+            <thead>
+              <tr>
+                <th>Case</th>
+                <th>Action</th>
+                <th>Target</th>
+                <th>Moderator</th>
+                <th>Reason</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody id="modlogs-body">
+              <tr><td colspan="6" class="empty">loading...</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="pagination" id="modlogs-pagination"></div>
+      </div>
+    </div>
+
+    <!-- Warnings Page -->
+    <div class="page" id="page-warnings">
+      <div class="section-card">
+        <div class="section-header">
+          <h2>Warnings</h2>
+          <p>view and manage user warnings</p>
+        </div>
+        <div class="form-row" style="margin-bottom: 20px;">
+          <input type="text" id="warn-search" placeholder="search by user ID..." oninput="filterWarns()" />
+        </div>
+        <div id="warns-list" class="warns-list">
+          <div class="loading">loading...</div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

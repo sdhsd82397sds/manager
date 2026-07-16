@@ -1,0 +1,47 @@
+{
+  "prefix": "!",
+  "logChannel": null,
+  "modLogChannel": null,
+  "welcomeChannel": null,
+  "welcomeMessage": "hey {user}, welcome to {server}! glad to have you here :)",
+  "leaveMessage": "welp, {user} just left. rip",
+  "autoRoleId": null,
+  "staffRoles": [],
+  "nsfwFilter": {
+    "enabled": false,
+    "threshold": 80,
+    "whitelistedChannels": [],
+    "action": "delete_warn_log"
+  },
+  "automod": {
+    "enabled": true,
+    "antiSpam": { "enabled": true, "maxMessages": 5, "interval": 3000 },
+    "antiLink": { "enabled": true, "whitelist": [] },
+    "badWords": { "enabled": true, "words": [] },
+    "antiCaps": { "enabled": true, "threshold": 70, "minLength": 10 },
+    "antiRaid": { "enabled": true, "joinThreshold": 10, "joinInterval": 10000 },
+    "escalation": {
+      "enabled": true,
+      "warn3": "timeout_10m",
+      "warn4": "timeout_1h",
+      "warn5": "kick",
+      "warn6": "ban"
+    }
+  },
+  "economy": {
+    "startingBalance": 500,
+    "dailyReward": 200,
+    "dailyStreakBonus": 50,
+    "maxBet": 10000,
+    "robSuccessChance": 35,
+    "robCooldown": 1800000
+  },
+  "logging": {
+    "messageDelete": true,
+    "messageEdit": true,
+    "memberJoin": true,
+    "memberLeave": true,
+    "modActions": true,
+    "voiceActivity": false
+  }
+}
